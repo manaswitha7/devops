@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+    contents: read
+    packages: write
 
     steps:
       - name: Checkout repository
@@ -28,3 +31,12 @@ jobs:
 
       - name: build docker image
         run: docker build -t devops .
+
+      - name: login to ghcr
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: build a docker image
+        run: docker build -t ghcr.io/${{ github.actor }}/devops:v1 .
+
+      - name: docker push
+        run: docker push ghcr.io/${{ github.actor }}/devops:v1
