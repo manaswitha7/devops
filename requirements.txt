@@ -1,0 +1,4 @@
+flask
+express
+cors
+body-parser
